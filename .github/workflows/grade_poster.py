@@ -10,7 +10,7 @@ import json
 # TODO: Untuk keamanan terbaik, sebaiknya pindahkan semua variabel ini ke GitHub Secrets.
 MOODLE_URL = "http://52.63.155.102"
 COURSE_ID = "2"      # Ganti dengan ID Kursus (Course) Moodle Anda
-ASSIGNMENT_ID = "3"  # Ganti dengan ID Tugas (Assignment) Moodle Anda
+ASSIGNMENT_ID = "2"  # Ganti dengan ID Tugas (Assignment) Moodle Anda
 
 # 2. Pemetaan Manual dari Username GitHub ke Email yang Terdaftar di Moodle
 #    Ini adalah "buku telepon" atau jembatan penghubung kita.
