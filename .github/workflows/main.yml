@@ -29,10 +29,11 @@ jobs:
           # || true agar workflow tidak gagal jika tes gagal
           pytest --json-report --json-report-file=report.json || true
 
-       - name: Debug secrets
-        run: |
-          echo "Moodle URL secret is: ${{ secrets.MOODLE_URL }}"
-          echo "Moodle Token secret is: ${{ secrets.MOODLE_TOKEN }}"   
+       # TAMBAHKAN LANGKAH DEBUG INI
+            - name: Debug secrets
+              run: |
+                echo "Moodle URL secret is: ${{ secrets.MOODLE_URL }}"
+                echo "Moodle Token secret is: ${{ secrets.MOODLE_TOKEN }}"
       
       # 4. Hitung nilai dan kirim ke Moodle
       - name: Grade and Post to Moodle
