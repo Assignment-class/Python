@@ -2,59 +2,58 @@ import os
 import requests
 import json
 
-# --- 1. Ambil Variabel dari Environment ---
-MOODLE_URL = os.environ['MOODLE_URL']
-MOODLE_TOKEN = os.environ['MOODLE_TOKEN']
-COURSE_ID = os.environ['MOODLE_COURSE_ID']
-ASSIGNMENT_ID = os.environ['MOODLE_ASSIGNMENT_ID']
-GITHUB_USERNAME = os.environ['GITHUB_USERNAME']
+# --- 1. Ambil Username GitHub ---
+GITHUB_USERNAME = os.environ.get('GITHUB_USERNAME', '')
 
-# --- 2. Baca Hasil Tes dan Hitung Skor ---
-try:
-    with open('report.json') as f:
-        report = json.load(f)
-    
-    total_tests = report['summary']['total']
-    passed_tests = report['summary'].get('passed', 0)
-    
-    # Kalkulasi nilai (0-100)
-    grade = (passed_tests / total_tests) * 100 if total_tests > 0 else 0
-    feedback = f"Hasil Tes:\nTotal: {total_tests}\nLulus: {passed_tests}\nGagal: {total_tests - passed_tests}"
+# --- 2. Pemetaan Manual GitHub ke Email ---
+# Tambahkan semua mahasiswa Anda di sini
+GITHUB_TO_EMAIL_MAP = {
+    "DhaniDS": "fastgoole@gmail.com",
+    "github_username_mahasiswa_lain": "email_moodle_mahasiswa_lain@example.com",
+    # Tambahkan mahasiswa lainnya di baris baru
+}
 
-except FileNotFoundError:
-    grade = 0
-    feedback = "Gagal menjalankan tes. File report.json tidak ditemukan."
+# Dapatkan email dari pemetaan
+moodle_email = GITHUB_TO_EMAIL_MAP.get(GITHUB_USERNAME)
 
-print(f"Calculated Grade for {GITHUB_USERNAME}: {grade}")
-print(f"Feedback: {feedback}")
+if not moodle_email:
+    print(f"Error: Username GitHub '{GITHUB_USERNAME}' tidak ditemukan dalam pemetaan manual.")
+    exit(1)
 
-# --- 3. Dapatkan Moodle User ID dari Username GitHub ---
-# Di Moodle, custom user profile field untuk 'github_username' harus dibuat terlebih dahulu
-# Site admin -> Users -> User profile fields -> Add new profile field (text input)
-# dengan shortname 'githubusername'
+print(f"Mencari pengguna Moodle dengan email: {moodle_email}")
+
+# --- 3. Dapatkan Moodle User ID dari Email ---
+# Siapkan parameter untuk API Moodle
+MOODLE_URL = "http://52.63.155.102" # Ganti jika perlu
+MOODLE_TOKEN = os.environ.get('MOODLE_TOKEN') # Pastikan secret MOODLE_TOKEN masih ada
 
 rest_params = {
     'wstoken': MOODLE_TOKEN,
     'wsfunction': 'core_user_get_users',
     'moodlewsrestformat': 'json',
-    'criteria[0][key]': 'profile_githubusername', # Ganti dengan shortname field Anda
-    'criteria[0][value]': GITHUB_USERNAME
+    'criteria[0][key]': 'email', # KITA MENCARI BERDASARKAN EMAIL
+    'criteria[0][value]': moodle_email
 }
 
 try:
     response = requests.get(f"{MOODLE_URL}/webservice/rest/server.php", params=rest_params)
     response.raise_for_status()
-    users = response.json()['users']
+    users = response.json().get('users', [])
     if not users:
-        print(f"Error: User Moodle dengan username GitHub '{GITHUB_USERNAME}' tidak ditemukan.")
+        print(f"Error: User Moodle dengan email '{moodle_email}' tidak ditemukan.")
         exit(1)
     moodle_user_id = users[0]['id']
-    print(f"Found Moodle User ID: {moodle_user_id}")
-
+    print(f"Berhasil menemukan Moodle User ID: {moodle_user_id}")
 except Exception as e:
     print(f"Error saat mencari user Moodle: {e}")
-    print("Response:", response.text)
+    if 'response' in locals():
+        print("Response dari server:", response.text)
     exit(1)
+
+# --- Sisanya sama (logika penilaian dan pengiriman nilai) ---
+# ... (kode untuk membaca report.json dan mengirim nilai tetap sama) ...
+# Pastikan Anda masih memiliki logika untuk mengirimkan nilai (mod_assign_save_grade)
+# Jika Anda butuh kode lengkapnya lagi, beri tahu saya.
 
 # --- 4. Kirim Nilai ke Moodle ---
 rest_params = {
