@@ -97,18 +97,15 @@ except Exception as e:
 if moodle_user_id:
     print(f"Mengirimkan nilai {grade:.2f} untuk user ID {moodle_user_id} ke tugas ID {ASSIGNMENT_ID}...")
     
-    grade_params = {
-        'wstoken': MOODLE_TOKEN,
-        'wsfunction': 'mod_assign_save_grade',
-        'moodlewsrestformat': 'json',
-        'assignmentid': ASSIGNMENT_ID,
-        'userid': moodle_user_id,
-        'grade[grade]': grade,
-        'addattempt': 1,
-        'workflowstate': 'graded',
-        'applytoall': 1,
-        'plugindata[assignfeedbackcomments_editor][text]': feedback,
-        'plugindata[assignfeedbackcomments_editor][format]': 1 # 1 for HTML/Plain text
+  grade_params = {
+    'wstoken': MOODLE_TOKEN,
+    'wsfunction': 'mod_assign_save_grade',
+    'moodlewsrestformat': 'json',
+    'assignmentid': ASSIGNMENT_ID,
+    'grades[0][userid]': moodle_user_id,
+    'grades[0][grade]': grade,
+    'grades[0][plugindata][assignfeedbackcomments_editor][text]': feedback,
+    'grades[0][plugindata][assignfeedbackcomments_editor][format]': 1
     }
 
     try:
