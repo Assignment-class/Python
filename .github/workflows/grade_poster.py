@@ -92,7 +92,7 @@ except:
     print("❌ Gagal membaca report.json. Nilai = 0.")
 
 # ==============================================================================
-# KIRIM NILAI KE MOODLE
+# KIRIM NILAI KE MOODLE (VERSI FIXED)
 # ==============================================================================
 grade_params = {
     'wstoken': MOODLE_TOKEN,
@@ -100,11 +100,12 @@ grade_params = {
     'moodlewsrestformat': 'json',
     'assignmentid': ASSIGNMENT_ID,
     'grades[0][userid]': user_id,
-    'grades[0][grade]': grade,
+    'grades[0][grade]': float(grade),
     'grades[0][plugindata][assignfeedbackcomments_editor][text]': feedback,
-    'grades[0][plugindata][assignfeedbackcomments_editor][format]': 1
+    'grades[0][plugindata][assignfeedbackcomments_editor][format]': 1,
 }
 
+# Gunakan data= bukan params=
 response = requests.post(f"{MOODLE_URL}/webservice/rest/server.php", data=grade_params)
 result = response.json()
 
