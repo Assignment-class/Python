@@ -108,11 +108,11 @@ grade_params = {
     "wstoken": MOODLE_TOKEN,
     "wsfunction": "mod_assign_save_grade",
     "moodlewsrestformat": "json",
-    "assignmentid": ASSIGNMENT_ID,
     "grades[0][userid]": user_id,
     "grades[0][grade]": int(grade),
     "grades[0][plugindata][assignfeedbackcomments_editor][text]": feedback,
     "grades[0][plugindata][assignfeedbackcomments_editor][format]": 1,
+    "assignmentid": ASSIGNMENT_ID
 }
 
 try:
