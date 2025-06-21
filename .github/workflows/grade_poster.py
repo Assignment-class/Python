@@ -106,7 +106,7 @@ if moodle_user_id:
     'grades[0][grade]': grade,
     'grades[0][plugindata][assignfeedbackcomments_editor][text]': feedback,
     'grades[0][plugindata][assignfeedbackcomments_editor][format]': 1
-    }
+}
 
     try:
         response = requests.post(f"{MOODLE_URL}/webservice/rest/server.php", params=grade_params)
