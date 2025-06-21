@@ -12,7 +12,7 @@ ASSIGNMENT_ID = 2       # ID Tugas sebagai integer
 
 GITHUB_TO_EMAIL_MAP = {
     "DhaniDS": "fastgoole@gmail.com",
-    "github_user_3": "email_moodle_3@example.com",
+    "DhaniDS": "dhanidwinawans12@gmail.com",
 }
 
 # ==============================================================================  
