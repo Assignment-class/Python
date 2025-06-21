@@ -28,6 +28,12 @@ jobs:
           # Jalankan pytest, --no-header agar output bersih
           # || true agar workflow tidak gagal jika tes gagal
           pytest --json-report --json-report-file=report.json || true
+      
+      # TAMBAHKAN LANGKAH DEBUG INI
+      - name: Verify report.json creation
+        run: |
+          echo "Melihat isi direktori setelah tes berjalan:"
+          ls -l
           
   # TAMBAHKAN LANGKAH DEBUG INI
       - name: Debug secrets
