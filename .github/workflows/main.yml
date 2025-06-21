@@ -34,12 +34,6 @@ jobs:
         run: |
           echo "Melihat isi direktori setelah tes berjalan:"
           ls -l
-          
-  # TAMBAHKAN LANGKAH DEBUG INI
-      - name: Debug secrets
-        run: |
-          echo "Moodle URL secret is: ${{ secrets.MOODLE_URL }}"
-          echo "Moodle Token secret is: ${{ secrets.MOODLE_TOKEN }}"
       
       # 4. Hitung nilai dan kirim ke Moodle
       - name: Grade and Post to Moodle
