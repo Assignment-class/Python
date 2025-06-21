@@ -18,7 +18,6 @@ ASSIGNMENT_ID = "3"  # Ganti dengan ID Tugas (Assignment) Moodle Anda
 GITHUB_TO_EMAIL_MAP = {
     "DhaniDS": "fastgoole@gmail.com",
     # --- TAMBAHKAN SEMUA MAHASISWA ANDA DI SINI ---
-    "DhaniDS": "dhanidwinawans12@gmail.com",
     "github_user_3": "email_moodle_3@example.com",
 }
 
