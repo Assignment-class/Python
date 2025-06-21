@@ -100,7 +100,7 @@ grade_params = {
     'moodlewsrestformat': 'json',
     'assignmentid': ASSIGNMENT_ID,
     'grades[0][userid]': user_id,
-    'grades[0][grade]': float(grade),
+    'grades[0][grade]': int(grade),
     'grades[0][plugindata][assignfeedbackcomments_editor][text]': feedback,
     'grades[0][plugindata][assignfeedbackcomments_editor][format]': 1,
 }
