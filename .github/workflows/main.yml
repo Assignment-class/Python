@@ -1,51 +1,34 @@
 name: Moodle Autograder CI
 
-# Pemicu: Berjalan setiap kali ada push ke branch main
 on: [push]
 
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
     steps:
-      # 1. Checkout kode mahasiswa
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # 2. Setup environment (contoh: Python)
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.10'
+
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
+          # Menambahkan pytest-json-report yang sangat penting
           pip install pytest requests pytest-json-report
 
-      # 3. Jalankan tes dan tangkap hasilnya
       - name: Run tests with pytest
         id: run-tests
         run: |
-          # Jalankan pytest, --no-header agar output bersih
-          # || true agar workflow tidak gagal jika tes gagal
+          # Perintah ini sekarang akan berhasil membuat report.json
           pytest --json-report --json-report-file=report.json || true
       
-      # TAMBAHKAN LANGKAH DEBUG INI
-      - name: Verify report.json creation
-        run: |
-          echo "Melihat isi direktori setelah tes berjalan:"
-          ls -l
-      
-      # 4. Hitung nilai dan kirim ke Moodle
       - name: Grade and Post to Moodle
         run: |
-          # Script ini akan membaca hasil tes dan mengirimnya ke Moodle
-          # Kita gunakan Python untuk memproses JSON dan mengirim request
           python .github/workflows/grade_poster.py
         env:
-          # Ambil kredensial dari GitHub Secrets
-          MOODLE_URL: ${{ secrets.MOODLE_URL }}
           MOODLE_TOKEN: ${{ secrets.MOODLE_TOKEN }}
-          MOODLE_COURSE_ID: ${{ secrets.MOODLE_COURSE_ID }}
-          MOODLE_ASSIGNMENT_ID: ${{ secrets.MOODLE_ASSIGNMENT_ID }}
-          # Ambil username GitHub mahasiswa dari konteks
           GITHUB_USERNAME: ${{ github.actor }}
