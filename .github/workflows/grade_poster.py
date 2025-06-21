@@ -3,12 +3,12 @@ import requests
 import json
 
 # ==============================================================================  
-# BAGIAN KONFIGURASI - MOHON ISI BAGIAN INI DENGAN DATA ANDA  
+# KONFIGURASI
 # ==============================================================================  
 
 MOODLE_URL = "http://52.63.155.102"
-COURSE_ID = "2"
-ASSIGNMENT_ID = "2"
+COURSE_ID = 2           # Pastikan dalam bentuk integer
+ASSIGNMENT_ID = 2       # ID Tugas sebagai integer
 
 GITHUB_TO_EMAIL_MAP = {
     "DhaniDS": "fastgoole@gmail.com",
@@ -16,7 +16,7 @@ GITHUB_TO_EMAIL_MAP = {
 }
 
 # ==============================================================================  
-# BAGIAN LOGIKA SKRIP  
+# LOGIKA UTAMA
 # ==============================================================================  
 
 MOODLE_TOKEN = os.environ.get('MOODLE_TOKEN')
@@ -96,18 +96,18 @@ if moodle_user_id:
         'moodlewsrestformat': 'json',
         'assignmentid': ASSIGNMENT_ID,
         'grades[0][userid]': moodle_user_id,
-        'grades[0][grade]': grade,
+        'grades[0][grade]': float(grade),
         'grades[0][plugindata][assignfeedbackcomments_editor][text]': feedback,
         'grades[0][plugindata][assignfeedbackcomments_editor][format]': 1
     }
 
-    # Debug log payload
     print("Payload yang dikirim:")
     for k, v in grade_params.items():
         print(f"{k}: {v}")
 
     try:
-        response = requests.post(f"{MOODLE_URL}/webservice/rest/server.php", params=grade_params)
+        # GUNAKAN data= BUKAN params=
+        response = requests.post(f"{MOODLE_URL}/webservice/rest/server.php", data=grade_params)
         response.raise_for_status()
 
         if 'exception' in response.json():
