@@ -8,7 +8,7 @@ import json
 MOODLE_URL = "http://52.63.155.102"
 COURSE_ID = 2
 # PENTING: Gunakan ID dari TUGAS BARU untuk pengetesan pertama kali.
-ASSIGNMENT_ID = 4 # Ganti dengan ID TUGAS BARU Anda
+ASSIGNMENT_ID = 3 # Ganti dengan ID TUGAS BARU Anda
 
 GITHUB_TO_EMAIL_MAP = {
     "DhaniDS": "fastgoole@gmail.com",
