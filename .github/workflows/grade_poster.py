@@ -103,7 +103,6 @@ else:
 grade_params = {
     'wstoken': MOODLE_TOKEN,
     'wsfunction': 'mod_assign_save_grades',
-    'wsfunction': 'mod_assign_save_grade',
     'moodlewsrestformat': 'json',
     'assignmentid': ASSIGNMENT_ID,
     'applytoall': 0,
