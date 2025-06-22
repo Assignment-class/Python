@@ -54,23 +54,6 @@ except Exception as e:
 
 # ==============================================================================
 # CEK STATUS SUBMISSION
-# ==============================================================================
-status_params = {
-    'wstoken': MOODLE_TOKEN,
-    'wsfunction': 'mod_assign_get_submission_status',
-    'moodlewsrestformat': 'json',
-    'assignid': ASSIGNMENT_ID,
-    'userid': user_id
-}
-
-response = requests.post(f"{MOODLE_URL}/webservice/rest/server.php", data=status_params)
-submission = response.json().get('lastattempt', {}).get('submission', {})
-
-if not submission or submission.get('status') not in ['submitted', 'draft']:
-    print(f"⚠️ User ini BELUM punya submission pada assignment ID {ASSIGNMENT_ID}. Grading dibatalkan.")
-    exit(0)
-else:
-    print(f"✅ User ini sudah punya submission (status: {submission.get('status')}). Siap dinilai.")
 
 # ==============================================================================
 # HITUNG NILAI
