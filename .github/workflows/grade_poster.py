@@ -7,10 +7,11 @@ import json
 # ==============================================================================
 MOODLE_URL = "http://52.63.155.102"
 COURSE_ID = "2"
-ASSIGNMENT_ID = "3"
+ASSIGNMENT_ID = "2"
 
 GITHUB_TO_EMAIL_MAP = {
     "DhaniDS": "fastgoole@gmail.com",
+    "DhaniDS": "dhanidwinawans12@gmail.com",
 }
 
 # ==============================================================================
@@ -91,8 +92,3 @@ grade_params = {
 response = requests.post(f"{MOODLE_URL}/webservice/rest/server.php", data=grade_params)
 result = response.json()
 
-if 'exception' in result:
-    print(f"❌ Error dari Moodle API: {result}")
-    exit(1)
-else:
-    print("✅ Nilai dan feedback berhasil dikirim ke Moodle.")
