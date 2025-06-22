@@ -7,7 +7,7 @@ import json
 # ==============================================================================
 MOODLE_URL = "http://52.63.155.102"
 COURSE_ID = "2"
-ASSIGNMENT_ID = "4"
+ASSIGNMENT_ID = "3"
 
 GITHUB_TO_EMAIL_MAP = {
     "DhaniDS": "fastgoole@gmail.com",
