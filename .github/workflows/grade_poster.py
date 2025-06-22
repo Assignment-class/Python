@@ -6,7 +6,7 @@ import json
 # KONFIGURASI - EDIT BAGIAN INI
 # ==============================================================================
 MOODLE_URL = "http://52.63.155.102"
-ASSIGNMENT_ID = 2 # Ganti dengan ID TUGAS BARU untuk pengetesan
+ASSIGNMENT_ID = 3 # Ganti dengan ID TUGAS BARU untuk pengetesan
 
 GITHUB_TO_EMAIL_MAP = {
     "DhaniDS": "fastgoole@gmail.com",
