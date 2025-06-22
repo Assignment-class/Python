@@ -17,18 +17,18 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install pytest requests
+          # Menambahkan pytest-json-report yang sangat penting
+          pip install pytest requests pytest-json-report
 
       - name: Run tests with pytest
         id: run-tests
         run: |
-          # Perintah ini membuat report.json jika tes ada dan berhasil dijalankan
+          # Perintah ini sekarang akan berhasil membuat report.json
           pytest --json-report --json-report-file=report.json || true
       
       - name: Grade and Post to Moodle
         run: |
           python .github/workflows/grade_poster.py
         env:
-          # Melewatkan token dan username dari GitHub ke dalam skrip
           MOODLE_TOKEN: ${{ secrets.MOODLE_TOKEN }}
           GITHUB_USERNAME: ${{ github.actor }}
