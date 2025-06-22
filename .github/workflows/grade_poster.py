@@ -1,37 +1,30 @@
 import os
 import requests
-import json
 
-# ==============================================================================
 # KONFIGURASI
-# ==============================================================================
 MOODLE_URL = "http://52.63.155.102"
-COURSE_ID = "2"
-ASSIGNMENT_ID = "3"
+ASSIGNMENT_ID = 3
 
 GITHUB_TO_EMAIL_MAP = {
     "DhaniDS": "fastgoole@gmail.com",
-    "DhaniDS": "dhanidwinawans12@gmail.com",
+    # Tambahkan lainnya jika perlu
 }
 
-# ==============================================================================
-# AMBIL ENVIRONMENT VARIABEL
-# ==============================================================================
+# Ambil token & username GitHub dari environment
 MOODLE_TOKEN = os.environ.get('MOODLE_TOKEN')
 GITHUB_USERNAME = os.environ.get('GITHUB_USERNAME')
 
 if not MOODLE_TOKEN or not GITHUB_USERNAME:
-    print("❌ MOODLE_TOKEN atau GITHUB_USERNAME tidak ditemukan.")
+    print("❌ MOODLE_TOKEN atau GITHUB_USERNAME belum diset di environment.")
     exit(1)
 
-# ==============================================================================
-# CARI EMAIL DAN USER ID MOODLE
-# ==============================================================================
-email = GITHUB_TO_EMAIL_MAP.get(GITHUB_USERNAME)
-if not email:
-    print(f"❌ Username GitHub '{GITHUB_USERNAME}' tidak ditemukan.")
+if GITHUB_USERNAME not in GITHUB_TO_EMAIL_MAP:
+    print(f"❌ Username {GITHUB_USERNAME} tidak ditemukan di GITHUB_TO_EMAIL_MAP.")
     exit(1)
 
+email = GITHUB_TO_EMAIL_MAP[GITHUB_USERNAME]
+
+# Langkah 1: Ambil user ID dari email
 search_params = {
     'wstoken': MOODLE_TOKEN,
     'wsfunction': 'core_user_get_users',
@@ -40,51 +33,34 @@ search_params = {
     'criteria[0][value]': email
 }
 
-try:
-    response = requests.get(f"{MOODLE_URL}/webservice/rest/server.php", params=search_params)
-    response.raise_for_status()
-    users = response.json().get('users', [])
-    if not users:
-        print(f"❌ Tidak ditemukan user dengan email {email}")
-        exit(1)
-    user_id = users[0]['id']
-    print(f"✅ Ditemukan user ID: {user_id} untuk email: {email}")
-except Exception as e:
-    print(f"❌ Gagal mendapatkan user ID dari email. {e}")
+response = requests.get(f"{MOODLE_URL}/webservice/rest/server.php", params=search_params)
+users = response.json().get('users', [])
+if not users:
+    print(f"❌ Tidak menemukan user dengan email {email}")
     exit(1)
 
-# ==============================================================================
-# CEK STATUS SUBMISSION
-# ==============================================================================
+user_id = users[0]['id']
+print(f"✅ Ditemukan user ID: {user_id} untuk email: {email}")
 
-# ==============================================================================
-# HITUNG NILAI
-# ==============================================================================
-grade = 0
-feedback = "Belum ada hasil."
-
-try:
-    with open('report.json') as f:
-        report = json.load(f)
-    total = report['summary'].get('total', 0)
-    passed = report['summary'].get('passed', 0)
-    failed = total - passed
-    grade = (passed / total) * 100 if total > 0 else 0
-    feedback = f"Hasil Tes Otomatis:\n- Total Tes: {total}\n- Lulus: {passed}\n- Gagal: {failed}\n\nNilai Anda: {grade:.2f}"
-    print(f"✅ Nilai berhasil dihitung: {grade}")
-except:
-    print("❌ Gagal membaca report.json. Nilai = 0.")
-
-# ==============================================================================
-# KIRIM NILAI KE MOODLE
-# ==============================================================================
-grade_params = {
+# Langkah 2: Cek status submission
+status_params = {
     'wstoken': MOODLE_TOKEN,
-    'wsfunction': 'mod_assign_save_grade',
+    'wsfunction': 'mod_assign_get_submission_status',
     'moodlewsrestformat': 'json',
-    'assignmentid': ASSIGNMENT_ID,
-    'grades[0][userid]': user_id,
-    'grades[0][grade]': grade,
-    'grades[0][plugindata][assignfeedbackcomments_editor][text]': feedback,
-    'grades[0][plugindata][assignfeedbackcomments_editor][format]': 1
+    'assignid': ASSIGNMENT_ID,
+    'userid': user_id
 }
+
+response = requests.post(f"{MOODLE_URL}/webservice/rest/server.php", data=status_params)
+data = response.json()
+
+if 'exception' in data:
+    print("❌ Error dari Moodle:", data)
+    exit(1)
+
+submission = data.get('lastattempt', {}).get('submission', {})
+if submission and submission.get('status') in ['submitted', 'draft']:
+    print(f"✅ User ini sudah punya submission (status: {submission.get('status')}). Siap dinilai.")
+else:
+    print(f"⚠️ User ini BELUM memiliki submission pada assignment ID {ASSIGNMENT_ID}.")
+    print("📝 Minta mahasiswa login & submit dulu ke assignment.")
