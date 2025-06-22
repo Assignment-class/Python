@@ -2,7 +2,7 @@ import os
 import json
 import requests
 
-MOODLE_URL = "http://localhost/moodle/moodle/webservice/rest/server.php"
+MOODLE_URL = "http://52.63.155.102/webservice/rest/server.php"
 MOODLE_TOKEN = os.getenv("MOODLE_TOKEN")
 GITHUB_USERNAME = os.getenv("GITHUB_USERNAME")
 
