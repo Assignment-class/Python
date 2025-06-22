@@ -88,7 +88,3 @@ grade_params = {
     'grades[0][plugindata][assignfeedbackcomments_editor][text]': feedback,
     'grades[0][plugindata][assignfeedbackcomments_editor][format]': 1
 }
-
-response = requests.post(f"{MOODLE_URL}/webservice/rest/server.php", data=grade_params)
-result = response.json()
-
