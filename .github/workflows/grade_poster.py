@@ -5,7 +5,7 @@ import json
 # Konfigurasi
 MOODLE_URL = "http://52.63.155.102"  # Ganti dengan URL Moodle-mu
 MOODLE_TOKEN = os.environ.get("MOODLE_TOKEN")  # Token dari Secrets
-ASSIGNMENT_ID = 4  # Assignment ID yang sesuai
+ASSIGNMENT_ID = 3  # Assignment ID yang sesuai
 EMAIL = "fastgoole@gmail.com"  # Email mahasiswa yang akan diberi nilai
 FEEDBACK_TEXT = "Hasil Tes Otomatis: - Total Tes: 2 - Lulus: 2 - Gagal: 0\nNilai Anda: 100"
 
