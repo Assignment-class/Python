@@ -2,23 +2,31 @@ import os
 import requests
 import json
 
-# ==============================================================================  
-# BAGIAN KONFIGURASI - MOHON ISI BAGIAN INI DENGAN DATA ANDA  
-# ==============================================================================  
+# ==============================================================================
+# BAGIAN KONFIGURASI - MOHON ISI BAGIAN INI DENGAN DATA ANDA
+# ==============================================================================
 
-MOODLE_URL = "http://52.63.155.102"
-COURSE_ID = "2"
-ASSIGNMENT_ID = "3"
+# 1. URL Moodle, ID Kursus, dan ID Tugas
+# TODO: Untuk keamanan terbaik, sebaiknya pindahkan semua variabel ini ke GitHub Secrets.
+MOODLE_URL = "http://52.63.155.102/"
+COURSE_ID = "2"      # Ganti dengan ID Kursus (Course) Moodle Anda
+ASSIGNMENT_ID = "3"  # Ganti dengan ID Tugas (Assignment) Moodle Anda
 
+# 2. Pemetaan Manual dari Username GitHub ke Email yang Terdaftar di Moodle
+#    Ini adalah "buku telepon" atau jembatan penghubung kita.
+#    Format: "UsernameDiGitHub": "email_yang_terdaftar_di_moodle@example.com"
 GITHUB_TO_EMAIL_MAP = {
     "DhaniDS": "fastgoole@gmail.com",
+    # --- TAMBAHKAN SEMUA MAHASISWA ANDA DI SINI ---
+    "github_user_2": "email_moodle_2@example.com",
     "github_user_3": "email_moodle_3@example.com",
 }
 
-# ==============================================================================  
-# BAGIAN LOGIKA SKRIP  
-# ==============================================================================  
+# ==============================================================================
+# BAGIAN LOGIKA SKRIP - Sebaiknya tidak perlu diubah
+# ==============================================================================
 
+# --- Langkah 1: Ambil Variabel dari GitHub Actions Environment ---
 MOODLE_TOKEN = os.environ.get('MOODLE_TOKEN')
 GITHUB_USERNAME = os.environ.get('GITHUB_USERNAME')
 
@@ -26,21 +34,21 @@ if not MOODLE_TOKEN or not GITHUB_USERNAME:
     print("Error: Variabel MOODLE_TOKEN atau GITHUB_USERNAME tidak ditemukan.")
     exit(1)
 
-# --- Hitung Nilai ---  
+# --- Langkah 2: Hitung Nilai dari Hasil Tes ---
 grade = 0
 feedback = "Feedback belum tersedia."
 
 try:
     with open('report.json') as f:
         report = json.load(f)
-
+    
     total_tests = report['summary'].get('total', 0)
     passed_tests = report['summary'].get('passed', 0)
     failed_tests = total_tests - passed_tests
-
+    
     if total_tests > 0:
         grade = (passed_tests / total_tests) * 100
-
+    
     feedback = f"Hasil Tes Otomatis:\n- Total Tes: {total_tests}\n- Lulus: {passed_tests}\n- Gagal: {failed_tests}\n\nNilai Anda: {grade:.2f}"
     print(f"Berhasil menghitung nilai: {grade}")
 
@@ -53,7 +61,7 @@ except Exception as e:
     feedback = f"Terjadi error saat memproses hasil tes: {e}"
     print(f"Error saat memproses report.json: {e}")
 
-# --- Cari User Moodle Berdasarkan Email ---  
+# --- Langkah 3: Cari User Moodle Berdasarkan Email ---
 moodle_email = GITHUB_TO_EMAIL_MAP.get(GITHUB_USERNAME)
 
 if not moodle_email:
@@ -86,30 +94,28 @@ except Exception as e:
         print("Response mentah dari server:", response.text)
     exit(1)
 
-# --- Kirim Nilai ke Moodle ---  
+# --- Langkah 4: Kirim Nilai dan Feedback ke Moodle ---
 if moodle_user_id:
     print(f"Mengirimkan nilai {grade:.2f} untuk user ID {moodle_user_id} ke tugas ID {ASSIGNMENT_ID}...")
-
+    
     grade_params = {
         'wstoken': MOODLE_TOKEN,
         'wsfunction': 'mod_assign_save_grade',
         'moodlewsrestformat': 'json',
         'assignmentid': ASSIGNMENT_ID,
-        'grades[0][userid]': moodle_user_id,
-        'grades[0][grade]': grade,
-        'grades[0][plugindata][assignfeedbackcomments_editor][text]': feedback,
-        'grades[0][plugindata][assignfeedbackcomments_editor][format]': 1
+        'userid': moodle_user_id,
+        'grade[grade]': grade,
+        'addattempt': 1,
+        'workflowstate': 'graded',
+        'applytoall': 1,
+        'plugindata[assignfeedbackcomments_editor][text]': feedback,
+        'plugindata[assignfeedbackcomments_editor][format]': 1 # 1 for HTML/Plain text
     }
-
-    # Debug log payload
-    print("Payload yang dikirim:")
-    for k, v in grade_params.items():
-        print(f"{k}: {v}")
 
     try:
         response = requests.post(f"{MOODLE_URL}/webservice/rest/server.php", params=grade_params)
         response.raise_for_status()
-
+        
         if 'exception' in response.json():
             print(f"Error dari Moodle API saat menyimpan nilai: {response.json()}")
             exit(1)
