@@ -9,7 +9,7 @@ import json
 # 1. URL Moodle, ID Kursus, dan ID Tugas Anda
 MOODLE_URL = "http://52.63.155.102"
 COURSE_ID = 2
-ASSIGNMENT_ID = 3 # Terakhir kali berhasil dengan ID 3
+ASSIGNMENT_ID = 4 # Terakhir kali berhasil dengan ID 3
 
 # 2. Pemetaan Manual Username GitHub ke Email Moodle
 #    Lengkapi daftar ini dengan semua mahasiswa Anda.
