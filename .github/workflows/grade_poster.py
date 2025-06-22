@@ -8,11 +8,10 @@ import json
 
 MOODLE_URL = "http://52.63.155.102"
 COURSE_ID = 2           # Pastikan dalam bentuk integer
-ASSIGNMENT_ID = 3       # ID Tugas sebagai integer
+ASSIGNMENT_ID = 2       # ID Tugas sebagai integer
 
 GITHUB_TO_EMAIL_MAP = {
     "DhaniDS": "fastgoole@gmail.com",
-    "DhaniDS": "dhanidwinawans12@gmail.com",
 }
 
 # ==============================================================================  
