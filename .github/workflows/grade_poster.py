@@ -11,7 +11,6 @@ ASSIGNMENT_ID = "3"
 
 GITHUB_TO_EMAIL_MAP = {
     "DhaniDS": "fastgoole@gmail.com",
-    "dhanidnawans12": "dhanidnawans12@gmail.com",
 }
 
 # ==============================================================================
