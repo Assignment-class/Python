@@ -5,8 +5,8 @@ import json
 # Konfigurasi
 MOODLE_URL = "http://52.63.155.102"
 MOODLE_TOKEN = os.getenv("MOODLE_TOKEN")
-EMAIL = os.getenv("EMAIL")  # email tetap dari environment variable
 ASSIGNMENT_ID = 3
+EMAIL = "fastgoole@gmail.com"  # Email tetap yang digunakan
 
 # Step 1: Ambil user ID dari email
 def get_user_id_by_email(email):
@@ -40,7 +40,7 @@ def get_submission_status(assignment_id, user_id):
                 return submission["status"]
     return None
 
-# Step 3: Hitung nilai dari file report.json
+# Step 3: Hitung nilai dari report.json
 def get_score_from_report():
     try:
         with open("report.json", "r") as f:
@@ -71,11 +71,10 @@ def post_grade(assignment_id, user_id, grade, feedback):
     }
     resp = requests.post(url, data=params)
     try:
-        resp_json = resp.json()
+        return resp.json()
     except Exception:
         print("Response:", resp.text)
         raise
-    return resp_json
 
 # Main process
 if __name__ == "__main__":
@@ -83,10 +82,6 @@ if __name__ == "__main__":
 
     grade, feedback = get_score_from_report()
     print(f"✅ Nilai berhasil dihitung: {grade}")
-    
-    if not EMAIL:
-        print("❌ EMAIL tidak diset di environment variable.")
-        exit(1)
 
     user_id = get_user_id_by_email(EMAIL)
     if not user_id:
