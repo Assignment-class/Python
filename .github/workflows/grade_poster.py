@@ -7,7 +7,7 @@ import json
 # ==============================================================================
 
 # 1. URL Moodle, ID Kursus, dan ID Tugas
-MOODLE_URL = "http://3.27.152.91"
+MOODLE_URL = "http://3.27.152.91/moodle"
 COURSE_ID = 2      # Sebaiknya gunakan angka, bukan string
 ASSIGNMENT_ID = 3  # Sebaiknya gunakan angka, bukan string
 
