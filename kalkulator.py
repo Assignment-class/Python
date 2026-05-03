@@ -1,30 +1,26 @@
-# kalkulator.py
-
 def tambah(a, b):
   """
   Fungsi ini menerima dua angka dan mengembalikan hasil penjumlahannya.
   """
-  # TODO: Hapus 'pass' dan tulis kode Anda di sini
-  pass
+  return a + b
 
 def kurang(a, b):
   """
   Fungasi ini menerima dua angka dan mengembalikan hasil pengurangannya.
   """
-  # TODO: Hapus 'pass' dan tulis kode Anda di sini
-  pass
+  return a - b
 
 def kali(a, b):
   """
   Fungsi ini menerima dua angka dan mengembalikan hasil perkaliannya.
   """
-  # TODO: Hapus 'pass' dan tulis kode Anda di sini
-  pass
+  return a * b
 
 def bagi(a, b):
   """
   Fungsi ini menerima dua angka dan mengembalikan hasil pembagiannya.
   Jika pembaginya adalah 0, kembalikan string "Error: Pembagian dengan nol".
   """
-  # TODO: Hapus 'pass' dan tulis kode Anda di sini
-  pass
+  if b == 0:
+      return "Error: Pembagian dengan nol"
+  return a / b
